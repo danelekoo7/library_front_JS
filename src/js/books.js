@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }).done(response => {
                 console.log('response' + response);
                 var book = JSON.parse(JSON.stringify(response));
-                divElement.innerText = 'typ: ' + book.type + '\n' +
+                divElement.innerText = 'type: ' + book.type + '\n' +
                     'isbn: ' + book.isbn;
                 divElement.classList.toggle("hidden")
             })
