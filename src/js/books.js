@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
     const tbody = document.querySelector("tbody");
 
+    const URL = "https://library-backend-app.herokuapp.com/books"
 
     function addBookToDom(book) {
         const row = document.createElement("tr");
         const title = document.createElement("td");
         const titleAnchor = document.createElement("a");
         const divElement = document.createElement("div");
+        divElement.className = ("hidden")
 
         titleAnchor.dataset.id = book.id;
         titleAnchor.innerText = book.title;
@@ -14,12 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         titleAnchor.addEventListener("click", function () {
             $.getJSON({
-                url: `http://localhost:8080/books/${this.dataset.id}`,
+                url: URL + `/${this.dataset.id}`,
             }).done(response => {
                 console.log('response' + response);
                 var book = JSON.parse(JSON.stringify(response));
                 divElement.innerText = 'typ: ' + book.type + '\n' +
                     'isbn: ' + book.isbn;
+                divElement.classList.toggle("hidden")
             })
         });
 
@@ -64,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         $.post({
-            url: "http://localhost:8080/books",
+            url: URL,
             data: JSON.stringify(newBook),
             headers: {
                 'Content-Type': 'application/json'
@@ -72,15 +75,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }).done(() => {
             location.reload(false);
         }).fail(() => {
-                alert("nie podałeś + ");
+            alert("pole tytuł jest wymagane");
             console.log("Nie udało się dodać książki")
         });
     });
 
 
-    // ASYNCHRONICZNOŚĆ
     $.get({
-        url: "http://localhost:8080/books"
+        url: URL
     }).done(response => {
         response.forEach(addBookToDom);
         console.log(response);
@@ -93,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var id = this.dataset.id;
         console.log(id);
         $.ajax({
-            url: "http://localhost:8080/books/" + id,
+            url: URL + "/" + id,
             method: "DELETE"
         }).done(() => {
             location.reload(false);
